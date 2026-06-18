@@ -28,5 +28,13 @@ RUN set -eux; \
     rm -rf /tmp/awscliv2.zip /tmp/aws; \
     aws --version
 
+# 安装 kubectl 最新 stable 版（按构建平台自动选择 amd64 / arm64）
+RUN set -eux; \
+    arch="$(dpkg --print-architecture)"; \
+    ver="$(curl -fsSL https://dl.k8s.io/release/stable.txt)"; \
+    curl -fsSL "https://dl.k8s.io/release/${ver}/bin/linux/${arch}/kubectl" -o /usr/local/bin/kubectl; \
+    chmod +x /usr/local/bin/kubectl; \
+    kubectl version --client
+
 # 恢复为原镜像的运行用户
 USER node
