@@ -1,4 +1,6 @@
-FROM ghcr.io/openclaw/openclaw:latest
+# 上游变种：extended-stable-slim（默认）/ extended-stable-browser，由工作流 matrix 传入
+ARG BASE_TAG=extended-stable-slim
+FROM ghcr.io/openclaw/openclaw:${BASE_TAG}
 
 # 基础镜像以非 root 的 node 用户运行，安装软件需切回 root
 USER root

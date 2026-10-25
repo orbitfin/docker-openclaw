@@ -26,6 +26,15 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    # 同步上游两个变种；latest 指向 extended-stable-slim
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: extended-stable-slim
+            latest: true
+          - variant: extended-stable-browser
+            latest: false
     permissions:
       contents: read
       packages: write
@@ -52,16 +61,21 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: |
+            latest=false
           tags: |
-            type=raw,value=latest
-            type=schedule,pattern={{date 'YYYYMMDD-HHmm'}}
-            type=sha,format=short
+            type=raw,value=${{ matrix.variant }}
+            type=raw,value=latest,enable=${{ matrix.latest }}
+            type=schedule,pattern={{date 'YYYYMMDD-HHmm'}},prefix=${{ matrix.variant }}-
+            type=sha,format=short,prefix=${{ matrix.variant }}-sha-
 
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
+          build-args: |
+            BASE_TAG=${{ matrix.variant }}
           platforms: linux/amd64,linux/arm64
           push: true
           # 始终拉取最新的上游 openclaw 基础镜像
