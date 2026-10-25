@@ -26,15 +26,18 @@ env:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    # 同步上游两个变种；latest 指向 extended-stable-slim
+    # base: 上游 openclaw 镜像标签；tag: 我们推送的标签
+    # latest 独立构建，基于上游 main 分支最新版
     strategy:
       fail-fast: false
       matrix:
         include:
-          - variant: extended-stable-slim
-            latest: true
-          - variant: extended-stable-browser
-            latest: false
+          - base: main
+            tag: latest
+          - base: extended-stable-slim
+            tag: extended-stable-slim
+          - base: extended-stable-browser
+            tag: extended-stable-browser
     permissions:
       contents: read
       packages: write
@@ -64,10 +67,9 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=raw,value=${{ matrix.variant }}
-            type=raw,value=latest,enable=${{ matrix.latest }}
-            type=schedule,pattern={{date 'YYYYMMDD-HHmm'}},prefix=${{ matrix.variant }}-
-            type=sha,format=short,prefix=${{ matrix.variant }}-sha-
+            type=raw,value=${{ matrix.tag }}
+            type=schedule,pattern={{date 'YYYYMMDD-HHmm'}},prefix=${{ matrix.tag }}-
+            type=sha,format=short,prefix=${{ matrix.tag }}-sha-
 
       - name: Build and push
         uses: docker/build-push-action@v7
@@ -75,7 +77,7 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            BASE_TAG=${{ matrix.variant }}
+            BASE_TAG=${{ matrix.base }}
           platforms: linux/amd64,linux/arm64
           push: true
           # 始终拉取最新的上游 openclaw 基础镜像

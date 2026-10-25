@@ -1,4 +1,4 @@
-# 上游变种：extended-stable-slim（默认）/ extended-stable-browser，由工作流 matrix 传入
+# 上游标签：main / extended-stable-slim（默认）/ extended-stable-browser，由工作流 matrix 传入
 ARG BASE_TAG=extended-stable-slim
 FROM ghcr.io/openclaw/openclaw:${BASE_TAG}
 

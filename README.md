@@ -1,6 +1,6 @@
 # docker-openclaw
 
-在 [`ghcr.io/openclaw/openclaw`](https://github.com/openclaw/openclaw) 的 `extended-stable-slim` / `extended-stable-browser` 两个变种基础上预装常用工具，并推送到本仓库的 GHCR。
+在 [`ghcr.io/openclaw/openclaw`](https://github.com/openclaw/openclaw) 的 `main` / `extended-stable-slim` / `extended-stable-browser` 三个标签基础上预装常用工具，并推送到本仓库的 GHCR。
 
 预装工具：
 
@@ -19,7 +19,8 @@
 
 | 标签 | 上游基础镜像 | 说明 |
 |---|---|---|
-| `latest` / `extended-stable-slim` | `openclaw/openclaw:extended-stable-slim` | 默认，`latest` 即 slim |
+| `latest` | `openclaw/openclaw:main` | 官方 main 分支最新版 |
+| `extended-stable-slim` | `openclaw/openclaw:extended-stable-slim` | 稳定版 slim |
 | `extended-stable-browser` | `openclaw/openclaw:extended-stable-browser` | 带浏览器，体积更大 |
 
 ```
@@ -28,9 +29,9 @@ ghcr.io/orbitfin/docker-openclaw:extended-stable-slim
 ghcr.io/orbitfin/docker-openclaw:extended-stable-browser
 ```
 
-另有可回溯的标签：`<变种>-YYYYMMDD-HHmm`（定时构建）、`<变种>-sha-<commit>`。
+另有可回溯的标签：`<标签>-YYYYMMDD-HHmm`（定时构建）、`<标签>-sha-<commit>`。
 
-本地构建指定变种：`docker build --build-arg BASE_TAG=extended-stable-browser .`
+本地构建指定上游标签：`docker build --build-arg BASE_TAG=extended-stable-browser .`
 
 ## 构建策略
 
